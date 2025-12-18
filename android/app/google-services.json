@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "806653602396",
+    "project_id": "projetnitroservice",
+    "storage_bucket": "projetnitroservice.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:806653602396:android:9cd2d4b4ef3ee04a78d499",
+        "android_client_info": {
+          "package_name": "com.example.nitroservice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEB96vUH6Ba-57fWjP7ssQfk_Q4eSU0YY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
