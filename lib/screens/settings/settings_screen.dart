@@ -64,20 +64,6 @@ activeColor: AppColors.primary,
       
       // Apparence
       _buildSection('Apparence'),
-      SwitchListTile(
-        title: Text('Mode sombre'),
-        subtitle: Text('Activer le thème sombre'),
-        value: _darkMode,
-        onChanged: (value) {
-          setState(() {
-            _darkMode = value;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Fonctionnalité à venir')),
-          );
-        },
-        activeColor: AppColors.primary,
-      ),
       
       Divider(),
       
