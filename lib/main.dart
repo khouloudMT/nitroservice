@@ -6,6 +6,9 @@ import 'package:provider/provider.dart';
 // Firebase Options
 import 'firebase_options.dart';
 
+// Services
+import 'services/payment_service.dart';
+
 // Providers
 import 'providers/auth_provider.dart';
 import 'providers/service_provider.dart';
@@ -40,14 +43,17 @@ void main() async {
   // Load environment variables from .env file
   await dotenv.load(fileName: ".env");
   
+  // Initialize Stripe
+  await PaymentService.initStripe();
+  
   try {
     // Initialiser Firebase avec les options de configuration
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    print('Firebase initialized successfully');
+    print('Firebase initialized');
   } catch (e) {
-    print('Firebase initialization error: $e');
+    print('Firebase error: $e');
   }
   
   runApp(const NitroServiceApp());
