@@ -333,7 +333,7 @@ class ProfileScreen extends StatelessWidget {
         SizedBox(height: 16),
         Text(AppStrings.appTagline),
         SizedBox(height: 16),
-        Text('© 2024 NitroService. Tous droits réservés.'),
+        Text('© 2025 NitroService. Tous droits réservés khalil khouloud fatma.'),
       ],
     );
   }
