@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'dart:convert';
 import '../../providers/auth_provider.dart';
 import '../../providers/booking_provider.dart';
+import '../../providers/theme_provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/constants/app_routes.dart';
@@ -191,6 +192,26 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
             
+            // Dark mode toggle
+            Consumer<ThemeProvider>(
+              builder: (context, themeProvider, child) {
+                return ListTile(
+                  leading: Icon(
+                    themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                    color: AppColors.primary,
+                  ),
+                  title: Text('Mode sombre'),
+                  trailing: Switch(
+                    value: themeProvider.isDarkMode,
+                    onChanged: (value) {
+                      themeProvider.toggleTheme();
+                    },
+                    activeColor: AppColors.primary,
+                  ),
+                );
+              },
+            ),
+            
             _buildMenuItem(
               context,
               Icons.settings,
@@ -333,7 +354,7 @@ class ProfileScreen extends StatelessWidget {
         SizedBox(height: 16),
         Text(AppStrings.appTagline),
         SizedBox(height: 16),
-        Text('© 2024 NitroService. Tous droits réservés.'),
+        Text('© 2025 NitroService. Tous droits réservés khalil khouloud fatma.'),
       ],
     );
   }

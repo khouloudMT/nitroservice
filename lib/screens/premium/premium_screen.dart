@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../providers/auth_provider.dart';
-import '../../services/payment_service.dart';
+import '../../services/payment_service.dart' as payment_service;
 import '../../services/firebase_service.dart';
 import '../../core/constants/app_colors.dart';
 import '../../widgets/custom_button.dart';
@@ -507,26 +507,22 @@ class PremiumScreen extends StatelessWidget {
       return;
     }
 
-    // Show loading
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Center(child: CircularProgressIndicator()),
-    );
-
     try {
-      // Process payment
-      bool success = await PaymentService.processPremiumPayment(
+      // Process payment directly without loading dialog
+      final amount = isMonthly ? 25.0 : 250.0;
+      final description = isMonthly ? 'Premium Monthly' : 'Premium Annual';
+      
+      print('Starting payment: $amount USD');
+      
+      bool success = await payment_service.PaymentService.processPayment(
         context: context,
-        userId: user.uid,
-        userName: userProfile.name,
-        email: user.email!,
-        isMonthly: isMonthly,
+        amount: amount,
+        description: description, currency: '',
       );
 
-      Navigator.pop(context); // Close loading dialog
-
       if (success) {
+        print(' Payment successful, updating profile...');
+        
         // Update user premium status in Firestore
         DateTime endDate = isMonthly
             ? DateTime.now().add(Duration(days: 30))
@@ -542,16 +538,18 @@ class PremiumScreen extends StatelessWidget {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Félicitations ! Vous êtes maintenant Premium'),
+            content: Text('Bienvenue Premium!'),
             backgroundColor: AppColors.success,
           ),
         );
+      } else {
+        print('Payment cancelled or failed');
       }
     } catch (e) {
-      Navigator.pop(context); // Close loading dialog
+      print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Erreur: $e'),
+          content: Text('Erreur de paiement'),
           backgroundColor: AppColors.error,
         ),
       );
