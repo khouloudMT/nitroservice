@@ -16,8 +16,17 @@ class BookingProvider extends ChangeNotifier {
 
   // Récupérer réservations de l'utilisateur
   void getUserBookings(String userId) {
+    print('📌 Fetching bookings for user: $userId');
     _firebaseService.getUserBookings(userId).listen((bookings) {
+      print('✅ Bookings received: ${bookings.length}');
+      for (var booking in bookings) {
+        print('   - ${booking.serviceName} (${booking.status.name}) on ${booking.scheduledDate}');
+      }
       _bookings = bookings;
+      notifyListeners();
+    }, onError: (error) {
+      print('❌ Error fetching bookings: $error');
+      _errorMessage = 'Erreur lors du chargement des réservations';
       notifyListeners();
     });
   }
@@ -60,12 +69,15 @@ class BookingProvider extends ChangeNotifier {
         createdAt: DateTime.now(),
       );
 
-      await _firebaseService.createBooking(booking);
+      print('📤 Saving to Firestore...');
+      final bookingId = await _firebaseService.createBooking(booking);
+      print('✅ Booking created with ID: $bookingId');
       
       _isLoading = false;
       notifyListeners();
       return true;
     } catch (e) {
+      print('❌ Error creating booking: $e');
       _errorMessage = 'Erreur lors de la création de la réservation';
       _isLoading = false;
       notifyListeners();

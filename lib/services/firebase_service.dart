@@ -59,19 +59,32 @@ class FirebaseService {
 
   // Créer réservation
   Future<String> createBooking(BookingModel booking) async {
-    DocumentReference ref = await _firestore.collection('bookings').add(booking.toMap());
-    return ref.id;
+    try {
+      print('Firebase: Creating booking with data: ${booking.toMap()}');
+      DocumentReference ref = await _firestore.collection('bookings').add(booking.toMap());
+      print('Firebase: Booking saved with ID: ${ref.id}');
+      return ref.id;
+    } catch (e) {
+      print(' Firebase: Error saving booking: $e');
+      rethrow;
+    }
   }
 
   // Stream des réservations utilisateur
   Stream<List<BookingModel>> getUserBookings(String userId) {
+    print(' Querying Firestore for bookings where userId = $userId');
     return _firestore
         .collection('bookings')
         .where('userId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) => BookingModel.fromFirestore(doc)).toList();
+      print('Firestore returned ${snapshot.docs.length} documents');
+      final bookings = snapshot.docs.map((doc) {
+        print('   - Doc ID: ${doc.id}');
+        return BookingModel.fromFirestore(doc);
+      }).toList();
+      return bookings;
     });
   }
 
