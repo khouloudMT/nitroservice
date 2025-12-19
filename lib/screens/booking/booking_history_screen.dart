@@ -24,10 +24,20 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadBookings();
+    });
+  }
+
+  void _loadBookings() {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final bookingProvider = Provider.of<BookingProvider>(context, listen: false);
+    
     if (authProvider.user != null) {
-      Provider.of<BookingProvider>(context, listen: false)
-          .getUserBookings(authProvider.user!.uid);
+      print('Loading bookings for user: ${authProvider.user!.uid}');
+      bookingProvider.getUserBookings(authProvider.user!.uid);
+    } else {
+      print(' No user logged in');
     }
   }
 
@@ -54,6 +64,10 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen>
       ),
       body: Consumer<BookingProvider>(
         builder: (context, bookingProvider, child) {
+          print('Render: Total bookings = ${bookingProvider.bookings.length}');
+          print('   Pending: ${bookingProvider.pendingBookings.length}');
+          print('   Completed: ${bookingProvider.completedBookings.length}');
+          
           if (bookingProvider.bookings.isEmpty) {
             return Center(
               child: Column(
@@ -66,6 +80,14 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen>
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Créez votre première réservation',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
                     ),
                   ),
                 ],

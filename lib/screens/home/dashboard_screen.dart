@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'dart:convert';
 import '../../providers/auth_provider.dart';
 import '../../providers/service_provider.dart';
 import '../../providers/booking_provider.dart';
@@ -102,7 +103,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         authProvider.user?.displayName ?? 
                         'Utilisateur';
         final isPremium = authProvider.userProfile?.isPremium ?? false;
-        // final profilePictureUrl = authProvider.userProfile?.profilePictureUrl;
+        final profilePictureBase64 = authProvider.userProfile?.profilePictureBase64;
 
         return Container(
           padding: const EdgeInsets.all(24),
@@ -116,16 +117,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Row(
             children: [
               // Profile Picture
-              // CircleAvatar(
-              //   radius: 30,
-              //   backgroundColor: Colors.white,
-              //   backgroundImage: profilePictureUrl != null
-              //       ? NetworkImage(profilePictureUrl)
-              //       : null,
-              //   child: profilePictureUrl == null
-              //       ? Icon(Icons.person, size: 35, color: AppColors.primary)
-              //       : null,
-              // ),
+              CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.white,
+                backgroundImage: profilePictureBase64 != null && profilePictureBase64.isNotEmpty
+                    ? MemoryImage(base64Decode(profilePictureBase64))
+                    : null,
+                child: profilePictureBase64 == null || profilePictureBase64.isEmpty
+                    ? Icon(Icons.person, size: 35, color: AppColors.primary)
+                    : null,
+              ),
               SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -455,6 +456,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       builder: (context, authProvider, child) {
         final userName = authProvider.userProfile?.name ?? 'Utilisateur';
         final userEmail = authProvider.user?.email ?? '';
+        final profilePictureBase64 = authProvider.userProfile?.profilePictureBase64;
 
         return Drawer(
           child: ListView(
@@ -470,16 +472,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    // CircleAvatar(
-                    //   radius: 30,
-                    //   backgroundColor: Colors.white,
-                    //   backgroundImage: profilePictureUrl != null
-                    //       ? NetworkImage(profilePictureUrl)
-                    //       : null,
-                    //   child: profilePictureUrl == null
-                    //       ? Icon(Icons.person, size: 35, color: AppColors.primary)
-                    //       : null,
-                    // ),
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.white,
+                      backgroundImage: profilePictureBase64 != null && profilePictureBase64.isNotEmpty
+                          ? MemoryImage(base64Decode(profilePictureBase64))
+                          : null,
+                      child: profilePictureBase64 == null || profilePictureBase64.isEmpty
+                          ? Icon(Icons.person, size: 35, color: AppColors.primary)
+                          : null,
+                    ),
                     const SizedBox(height: 10),
                     Text(
                       userName,
